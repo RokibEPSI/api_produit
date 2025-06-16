@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 class ProductBase(BaseModel):
     name: str
@@ -17,3 +17,11 @@ class ProductOut(ProductBase):
 
     class Config:
         from_attributes = True
+class UserCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

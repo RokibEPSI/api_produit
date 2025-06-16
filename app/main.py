@@ -1,8 +1,8 @@
 from fastapi import FastAPI
-from . import models, database, routes
+from app.routes import router
+from app.database import engine, Base
 
-models.Base.metadata.create_all(bind=database.engine)
+Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="API Produits – Paye Ton Kawa")
-
-app.include_router(routes.router, prefix="/products", tags=["Produits"])
+app = FastAPI(title="API Produits - Paye ton Kawa")
+app.include_router(router, prefix="/produits", tags=["Produits"])

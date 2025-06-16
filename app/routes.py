@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import crud, schemas
 from .database import SessionLocal
-
+from app.auth import get_current_user
+from fastapi import Depends
 router = APIRouter()
 
 def get_db():
@@ -34,3 +35,7 @@ def update(product_id: int, data: schemas.ProductCreate, db: Session = Depends(g
 @router.delete("/{product_id}")
 def delete(product_id: int, db: Session = Depends(get_db)):
     return crud.delete_product(db, product_id)
+
+@router.get("/produits-proteges/", dependencies=[Depends(get_current_user)])
+def read_secure_data():
+    return {"msg": "Accès autorisé"}
