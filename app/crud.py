@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from . import models, schemas
-
+from .models import User
+from .auth import get_password_hash
 def get_products(db: Session, skip: int = 0, limit: int = 10):
     return db.query(models.Product).offset(skip).limit(limit).all()
 
@@ -29,3 +30,10 @@ def delete_product(db: Session, product_id: int):
         db.delete(db_product)
         db.commit()
     return db_product
+def create_user(db: Session, username: str, password: str):
+    hashed_password = get_password_hash(password)
+    user = User(username=username, hashed_password=hashed_password)
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
