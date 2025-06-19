@@ -35,8 +35,8 @@ Fonctionnalités principales :
 ```bash
 git clone https://github.com/RokibEPSI/api_produit.git
 cd api_produit
-```
-###  Structure du projet
+
+
 
 api_produit/
 │
@@ -52,7 +52,7 @@ api_produit/
 ├── Dockerfile
 ├── docker-compose.yml
 └── requirements.txt
-
+```
 # Authentification
 L’API utilise une authentification OAuth2 avec JWT.
 
