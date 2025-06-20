@@ -1,12 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from . import crud, schemas
+from fastapi.encoders import jsonable_encoder
 from .database import SessionLocal
 from app.auth import get_current_user
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from app.auth import verify_password, create_access_token
 from app.models import User
+from app.event_bus import publish_event
 
 router = APIRouter()
 
@@ -19,7 +21,9 @@ def get_db():
 
 @router.post("/", response_model=schemas.ProductOut)
 def create(product: schemas.ProductCreate, db: Session = Depends(get_db)):
-    return crud.create_product(db, product)
+    new_product = crud.create_product(db, product)
+    publish_event("products.created", jsonable_encoder(new_product))
+    return new_product
 
 @router.get("/", response_model=list[schemas.ProductOut])
 def list(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
@@ -34,11 +38,17 @@ def read(product_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{product_id}", response_model=schemas.ProductOut)
 def update(product_id: int, data: schemas.ProductCreate, db: Session = Depends(get_db)):
-    return crud.update_product(db, product_id, data)
+    updated_product = crud.update_product(db, product_id, data)
+    publish_event("products.updated", jsonable_encoder(updated_product))
+    return updated_product
+
 
 @router.delete("/{product_id}")
 def delete(product_id: int, db: Session = Depends(get_db)):
-    return crud.delete_product(db, product_id)
+    crud.delete_product(db, product_id)
+    publish_event("products.deleted", {"id": product_id})
+    return {"message": "Produit supprimé avec succès"}
+
 
 @router.post("/produits/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
