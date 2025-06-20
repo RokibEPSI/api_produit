@@ -39,6 +39,11 @@ Cette API gère les produits de l'application **Paye Ton Kawa**.
 ```bash
 git clone https://github.com/RokibEPSI/api_produit.git
 cd api_produit
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 82071559bf77a9e956fe16be6ddcc7404a346576
 
 api_produit/
 │
@@ -54,8 +59,14 @@ api_produit/
 ├── Dockerfile
 ├── docker-compose.yml
 └── requirements.txt
+<<<<<<< HEAD
 
 ## Authentification
+=======
+```
+# Authentification
+L’API utilise une authentification OAuth2 avec JWT.
+>>>>>>> 82071559bf77a9e956fe16be6ddcc7404a346576
 
 L’API utilise une authentification **OAuth2 avec JWT**.
 
