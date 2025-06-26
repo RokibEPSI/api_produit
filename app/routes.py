@@ -4,11 +4,14 @@ from . import crud, schemas
 from fastapi.encoders import jsonable_encoder
 from .database import SessionLocal
 from app.auth import get_current_user
-from fastapi import Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from app.auth import verify_password, create_access_token
 from app.models import User
 from app.event_bus import publish_event
+from app.auth import get_password_hash
+from app.schemas import UserCreate, Token, UserOut
+
+
 
 router = APIRouter()
 
@@ -61,3 +64,16 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
 @router.get("/produits-proteges/", dependencies=[Depends(get_current_user)])
 def read_secure_data():
     return {"msg": "Accès autorisé"}
+
+@router.post("/register", response_model=schemas.UserOut)
+def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    user_exists = db.query(User).filter(User.username == user.username).first()
+    if user_exists:
+        raise HTTPException(status_code=400, detail="Nom d'utilisateur déjà pris")
+    hashed_password = get_password_hash(user.password)
+    new_user = User(username=user.username, email=user.email, hashed_password=hashed_password)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
