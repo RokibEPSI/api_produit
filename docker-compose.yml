@@ -11,12 +11,23 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"     # Port de communication AMQP
+      - "15672:15672"   # Interface de gestion web
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
   api-produit:
     build: .
     depends_on:
       - db
+      - rabbitmq
     environment:
       DATABASE_URL: postgresql://postgres:rkb.0102@db:5432/api_produit
+      RABBITMQ_HOST: rabbitmq
     ports:
       - "8001:8000"
     command: >
