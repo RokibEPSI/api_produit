@@ -22,7 +22,7 @@ def get_db():
     finally:
         db.close()
 
-@router.post("/", response_model=schemas.ProductOut)
+@router.post("/", response_model=schemas.ProductOut, dependencies=[Depends(get_current_user)])
 def create(product: schemas.ProductCreate, db: Session = Depends(get_db)):
     new_product = crud.create_product(db, product)
     publish_event("products.created", jsonable_encoder(new_product))

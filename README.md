@@ -39,34 +39,37 @@ Cette API gère les produits de l'application **Paye Ton Kawa**.
 ```bash
 git clone https://github.com/RokibEPSI/api_produit.git
 cd api_produit
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 82071559bf77a9e956fe16be6ddcc7404a346576
 
 api_produit/
 │
 ├── app/
-│   ├── main.py           # Entrée FastAPI
-│   ├── routes.py         # Routes API
-│   ├── auth.py           # Authentification
-│   ├── crud.py           # Logique métier
-│   ├── schemas.py        # Schémas Pydantic
-│   ├── models.py         # Modèles SQLAlchemy
-│   └── database.py       # Connexion DB
+│   ├── __init__.py           # Fichier d'initialisation du module
+│   ├── main.py               # Point d'entrée FastAPI
+│   ├── routes.py             # Définition des routes API
+│   ├── auth.py               # Gestion de l'authentification
+│   ├── crud.py               # Logique métier (CRUD)
+│   ├── schemas.py            # Schémas Pydantic (validation)
+│   ├── models.py             # Modèles SQLAlchemy (ORM)
+│   ├── database.py           # Connexion et configuration DB
+│   └── dependencies.py       # Dépendances réutilisables (optionnel)
+│   ├── event_bus.py
+├── tests/
+│   ├── __init__.py           # Initialisation des tests
+│   ├── test_main.py          # Tests des endpoints principaux
+│   └── test_auth.py          # Tests de l'authentification
 │
-├── Dockerfile
-├── docker-compose.yml
-└── requirements.txt
-<<<<<<< HEAD
+├── Dockerfile                # Image Docker de l'API
+├── docker-compose.yml        # Orchestration des services (API + DB)
+├── requirements.txt          # Dépendances Python
+├── README.md                 # Documentation du projet
+└── .env                      # Variables d'environnement (à ne pas versionner)
 
 ## Authentification
 =======
 ```
 # Authentification
 L’API utilise une authentification OAuth2 avec JWT.
->>>>>>> 82071559bf77a9e956fe16be6ddcc7404a346576
 
 L’API utilise une authentification **OAuth2 avec JWT**.
 

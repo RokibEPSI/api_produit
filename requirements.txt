@@ -23,3 +23,7 @@ pydantic[email]
 python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
+requests
+httpx
+pytest
+python-dotenv
