@@ -3,9 +3,9 @@ services:
     image: postgres:15
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: rkb.0102
-      POSTGRES_DB: api_produit
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Définissez POSTGRES_PASSWORD dans .env}
+      POSTGRES_DB: ${POSTGRES_DB:-api_produit}
     ports:
       - "5440:5432"
     volumes:
@@ -17,8 +17,8 @@ services:
       - "5672:5672"     # Port de communication AMQP
       - "15672:15672"   # Interface de gestion web
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER:-guest}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD:-guest}
 
   api-produit:
     build: .
@@ -26,8 +26,9 @@ services:
       - db
       - rabbitmq
     environment:
-      DATABASE_URL: postgresql://postgres:rkb.0102@db:5432/api_produit
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-api_produit}
       RABBITMQ_HOST: rabbitmq
+      SECRET_KEY: ${SECRET_KEY:?Définissez SECRET_KEY dans .env}
     ports:
       - "8001:8000"
     command: >

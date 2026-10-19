@@ -39,8 +39,27 @@ Cette API gère les produits de l'application **Paye Ton Kawa**.
 ```bash
 git clone https://github.com/RokibEPSI/api_produit.git
 cd api_produit
+```
 
+### 3. Configurer les variables d'environnement
 
+Les mots de passe et la clé JWT ne sont pas dans le code : ils sont lus depuis un fichier `.env` (non versionné).
+
+```bash
+cp .env.example .env
+# puis remplir POSTGRES_PASSWORD et SECRET_KEY
+python -c "import secrets; print(secrets.token_urlsafe(32))"   # génère une SECRET_KEY
+```
+
+### 4. Lancer l'application
+
+```bash
+docker compose up --build
+```
+
+## Structure du projet
+
+```
 api_produit/
 │
 ├── app/
@@ -63,18 +82,16 @@ api_produit/
 ├── docker-compose.yml        # Orchestration des services (API + DB)
 ├── requirements.txt          # Dépendances Python
 ├── README.md                 # Documentation du projet
-└── .env                      # Variables d'environnement (à ne pas versionner)
+└── .env.example              # Modèle des variables d'environnement (copier en .env)
+```
 
 ## Authentification
-=======
-```
-# Authentification
-L’API utilise une authentification OAuth2 avec JWT.
 
-L’API utilise une authentification **OAuth2 avec JWT**.
+L’API utilise une authentification **OAuth2 avec JWT**. La création, la modification et la suppression de produits exigent un jeton valide ; la lecture reste publique.
 
 ### Endpoints :
-- `POST /produits/login` : obtention du token JWT  
+- `POST /produits/register` : création d'un utilisateur  
+- `POST /produits/produits/login` : obtention du token JWT  
 - `GET /produits/produits-proteges/` : endpoint protégé nécessitant un token JWT valide
 
 ---

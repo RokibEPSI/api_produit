@@ -1,3 +1,6 @@
+import os
+import secrets
+import warnings
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -7,9 +10,14 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models import User
 
-SECRET_KEY = "supersecret"  # À remplacer par un secret fort
+# La clé de signature des JWT vient de l'environnement (voir .env.example).
+# Sans elle, une clé aléatoire est générée : les jetons ne survivent pas à un redémarrage.
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    SECRET_KEY = secrets.token_urlsafe(32)
+    warnings.warn("SECRET_KEY absente : clé temporaire générée pour cette exécution.")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 #oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")

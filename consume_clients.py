@@ -1,5 +1,6 @@
 # consume_clients.py (à placer dans l’API Produits)
 
+import os
 import pika
 import json
 
@@ -11,7 +12,7 @@ def callback(ch, method, properties, body):
 def main():
     print("🎧 En attente des événements RabbitMQ (clients.created, clients.updated)...")
 
-    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(os.getenv("RABBITMQ_HOST", "localhost")))
     channel = connection.channel()
 
     channel.exchange_declare(exchange='events', exchange_type='topic')
