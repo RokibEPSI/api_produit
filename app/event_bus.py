@@ -1,8 +1,10 @@
 # event_bus.py
+import os
 import pika
 import json
 
-RABBITMQ_HOST = 'localhost'
+# Dans Docker Compose, RABBITMQ_HOST vaut « rabbitmq » (nom du service)
+RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "localhost")
 EXCHANGE = 'events'
 
 #  Envoi d’un message vers RabbitMQ

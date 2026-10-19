@@ -39,16 +39,20 @@ def read(product_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Produit non trouvé")
     return product
 
-@router.put("/{product_id}", response_model=schemas.ProductOut)
+@router.put("/{product_id}", response_model=schemas.ProductOut, dependencies=[Depends(get_current_user)])
 def update(product_id: int, data: schemas.ProductCreate, db: Session = Depends(get_db)):
     updated_product = crud.update_product(db, product_id, data)
+    if not updated_product:
+        raise HTTPException(status_code=404, detail="Produit non trouvé")
     publish_event("products.updated", jsonable_encoder(updated_product))
     return updated_product
 
 
-@router.delete("/{product_id}")
+@router.delete("/{product_id}", dependencies=[Depends(get_current_user)])
 def delete(product_id: int, db: Session = Depends(get_db)):
-    crud.delete_product(db, product_id)
+    deleted_product = crud.delete_product(db, product_id)
+    if not deleted_product:
+        raise HTTPException(status_code=404, detail="Produit non trouvé")
     publish_event("products.deleted", {"id": product_id})
     return {"message": "Produit supprimé avec succès"}
 

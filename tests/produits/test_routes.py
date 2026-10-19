@@ -22,3 +22,25 @@ def test_create_product_unauthorized(mock_publish):
     })
     assert response.status_code == 401
     mock_publish.assert_not_called()
+
+
+@patch("app.routes.publish_event")
+def test_update_product_unauthorized(mock_publish):
+    response = client.put("/produits/1", json={
+        "name": "Produit modifié",
+        "created_at": "2025-07-05T12:00:00",
+        "price": "9.99",
+        "description": "Modification sans jeton",
+        "color": "bleu",
+        "stock": "5",
+        "order_id": 1
+    })
+    assert response.status_code == 401
+    mock_publish.assert_not_called()
+
+
+@patch("app.routes.publish_event")
+def test_delete_product_unauthorized(mock_publish):
+    response = client.delete("/produits/1")
+    assert response.status_code == 401
+    mock_publish.assert_not_called()
